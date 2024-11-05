@@ -1,0 +1,232 @@
+<div class="container">
+  <div class="header">
+      <div class="search-container">
+          <input type="text" placeholder="Chercher un groupe" class="search-bar">
+          <button class="search-button">
+              Search <i class="uil uil-search" style="color: var(--second-color); font-size: 13px"></i>
+          </button>
+      </div>
+      <button (click)="openAddgroupPopup()" class="btn-add">
+          Ajouter <i class="uil uil-users-alt" style="color: var(--second-color); font-size: 15px">+</i>
+      </button>
+  </div>
+
+  <div class="table-responsive">
+      <table class="group-table">
+          <thead>
+              <tr>
+                  <th rowspan="2">Id</th>
+                  <th rowspan="2">Nom du Groupe</th>
+                  <th colspan="6">Membres</th>
+                  <th rowspan="2">Action</th>
+              </tr>
+              <tr>
+                  <th>Id</th>
+                  <th>Nom</th>
+                  <th>Affiliation</th>
+                  <th>Nom de l'Institution</th>
+                  <th>Adresse de l'Institution</th>
+                  <th>Action</th>
+              </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngFor="let group of paginatedGroups">
+              <tr class="group-row">
+                <td [attr.rowspan]="(group.membres.length || 1) + 1">{{ group.id }}</td>
+                <td [attr.rowspan]="(group.membres.length || 1) + 1">{{ group.groupename }}</td>
+                <td colspan="6"></td>
+                <td [attr.rowspan]="(group.membres.length || 1) + 1" class="action-cell">
+                  <i class="uil uil-edit-alt action-icon" (click)="openUpdateGroupPopup(group)" style="color: green;"></i>
+                  <i class="uil uil-trash-alt action-icon" (click)="removeGroup(group.id)" style="color: #ff4d4d;"></i>
+                </td>
+              </tr>
+              <tr *ngFor="let member of group.membres">
+                <td>{{ member.id }}</td>
+                <td>{{ member.name }}</td>
+                <td>{{ member.affiliation }}</td>
+                <td>{{ member.institutionName }}</td>
+                <td>{{ member.institutionAdress }}</td>
+                <td>
+                  <i class="uil uil-edit-alt action-icon" (click)="updateMembres()" style="color: green; margin-right: 10px;"></i>
+                  <i class="uil uil-trash-alt action-icon" (click)="removeMembre(member.id)" style="color: #ff4d4d;"></i>
+                </td>
+              </tr>
+            </ng-container>
+          </tbody>
+      </table>
+      <mat-paginator
+      [pageSizeOptions]="pageSizeOptions"
+      [pageSize]="pageSize"
+      (page)="onPageChange($event)"
+      showFirstLastButtons
+    >
+    </mat-paginator>
+     
+  </div>
+</div>
+
+
+<!-- Popup pour ajouter un groupe -->
+<ng-template #addGroupDialog>
+  <div class="dialog-header">
+    <h1>Ajouter un Nouveau Groupe
+      
+    </h1>
+    <button mat-icon-button class="close-icon" (click)="closeDialogGroupe()">
+      <mat-icon >close</mat-icon>
+    </button>
+  </div>
+  <div class="dialog-content">
+   
+        <form [formGroup]="addGroupForm" (ngSubmit)="addGroup()">
+          <mat-card>
+            <mat-card-content>
+          <mat-form-field appearance="outline">
+            <mat-label>Nom du Groupe</mat-label>
+            <input matInput type="text" formControlName="groupName" required>
+            <mat-error *ngIf="addGroupForm.get('groupName')?.invalid">Ce champs est obligatoire</mat-error>
+          </mat-form-field>
+        
+      </mat-card-content>
+    </mat-card>
+    <mat-card>
+      <mat-card-content>
+        <mat-form-field appearance="outline">
+          <mat-label>Membres</mat-label>
+          <mat-select formControlName="members" multiple>
+            <mat-option *ngFor="let author of Authors" [value]="author.id">{{ author.name }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <div class="button-container-1">
+        <button type="button" mat-button  class="btn-addMb" (click)="openAddMemberPopup()">
+          Ajouter un membre
+        </button>
+      </div>
+      </mat-card-content>
+    </mat-card>
+  </form>
+  </div>
+  <div class="button-container">
+    <button (click)="addGroup()" class="btn-saugared" [disabled]="addGroupForm.invalid">
+      Enregistrer <i class="uil uil-check" style="color: var(--second-color); font-size: 20px"></i>
+      
+    </button>
+  </div>
+  
+</ng-template>
+
+<!-- Popup pour ajouter un membre -->
+<ng-template #addMemberDialog>
+  <div class="dialog-header">
+    <h1>Ajouter un nouvel auteur</h1>
+    <button mat-icon-button class="close-icon" (click)="closeDialogMembres()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div class="dialog-content">
+    <form [formGroup]="addMemberForm" (ngSubmit)="addNewMember()">
+      <mat-form-field appearance="outline">
+        <mat-label>Nom de l'auteur</mat-label>
+        <input matInput type="text" formControlName="name" required>
+        <mat-error *ngIf="addMemberForm.get('name')?.invalid">Ce champs est obligatoir</mat-error>
+      </mat-form-field>
+      
+      <mat-form-field appearance="outline">
+        <mat-label>Affiliation</mat-label>
+        <input matInput type="text" formControlName="affiliation" required>
+        <mat-error *ngIf="addMemberForm.get('affiliation')?.invalid">Ce champs est obligatoir</mat-error>
+      </mat-form-field>
+      
+      <mat-form-field appearance="outline">
+        <mat-label>Nom de l'institution</mat-label>
+        <input matInput type="text" formControlName="institutionName" required>
+        <mat-error *ngIf="addMemberForm.get('institutionName')?.invalid">Ce champs est obligatoir</mat-error>
+      </mat-form-field>
+      
+      <mat-form-field appearance="outline">
+        <mat-label>Adresse de l'institution</mat-label>
+        <input matInput type="text" formControlName="institutionAdress" required>
+        <mat-error *ngIf="addMemberForm.get('institutionAdress')?.invalid">Ce champs est obligatoir</mat-error>
+      </mat-form-field>
+    </form>
+  </div>
+  <div class="button-container">
+    <button (click)="addNewMember()" class="btn-saugared" [disabled]="addGroupForm.invalid">
+      Enregistrer <span> </span><i class="uil uil-user-check" style="color: var(--second-color); font-size: 20px"></i>
+      
+    </button>
+  </div>
+  
+</ng-template>
+
+<!-- template pour supprimer un group -->
+ 
+  <ng-template #confirmDialog let-data>
+    <h2 mat-dialog-title>Confirmation</h2>
+    <mat-dialog-content>{{ data.message }}</mat-dialog-content>
+    <mat-dialog-actions align="end">
+      <button mat-button (click)="dialogRef.close(false)">Annuler</button>
+      <button mat-button color="warn" (click)="dialogRef.close(true)">Confirmer</button>
+    </mat-dialog-actions>
+  </ng-template>
+
+  <!-- template pour supprimer un auteur -->
+  <ng-template #confirmDialogMembre let-data>
+    <h2 mat-dialog-title>Confirmation</h2>
+    <mat-dialog-content>{{ data.message }}</mat-dialog-content>
+    <mat-dialog-actions align="end">
+      <button mat-button (click)="dialogRef.close(false)">Annuler</button>
+      <button mat-button color="warn" (click)="dialogRef.close(true)">Confirmer</button>
+    </mat-dialog-actions>
+  </ng-template>
+
+  <!-- template pour update le groupe -->
+  <ng-template #updateGroupDialog let-group="group">
+    <div class="dialog-header">
+      <h1>Mettre à jour le Groupe</h1>
+      <button mat-icon-button class="close-icon" (click)="closeDialogGroupe()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  
+    <div class="dialog-content">
+      <form [formGroup]="updateGroupForm" (ngSubmit)="updateGroup(group)">
+        <mat-card>
+          <mat-card-content>
+            <mat-form-field appearance="outline">
+              <mat-label>Nom du Groupe</mat-label>
+              <input matInput type="text" formControlName="groupName" required>
+              <mat-error *ngIf="updateGroupForm.get('groupName')?.invalid">Ce champ est obligatoire</mat-error>
+            </mat-form-field>
+          </mat-card-content>
+        </mat-card>
+  
+        <mat-card>
+          <mat-card-content>
+            <mat-form-field appearance="outline">
+              <mat-label>Membres</mat-label>
+              <mat-select formControlName="members" multiple>
+                <mat-option *ngFor="let author of Authors" [value]="author.id">     
+                  {{ author.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <div class="button-container-1">
+              <button type="button" mat-button  class="btn-addMb" (click)="openAddMemberPopup()">
+                Ajouter un membre
+              </button>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </form>
+    </div>
+  
+    <div class="button-container">
+      <button (click)="updateGroup(group)" class="btn-saugared" [disabled]="updateGroupForm.invalid">
+        Enregistrer <i class="uil uil-check" style="color: var(--second-color); font-size: 20px"></i>
+      </button>
+    </div>
+  </ng-template>
+  
+  
+

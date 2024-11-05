@@ -1,0 +1,98 @@
+<mat-toolbar class="mat-elevation-z8 toolbar">
+  <div class="menu-buttons" [ngClass]="{'align-right': isMobile}">
+    <button mat-icon-button *ngIf="sidenav.mode === 'over'" (click)="sidenav.toggle()">
+      <mat-icon>{{ sidenav.opened ? 'close' : 'menu' }}</mat-icon>
+    </button>
+  </div>
+  <div class="logo">
+    <img class="avatar" src="../../../assets/imgs/fts_logo.png" alt="Logo">
+    <span class="app-name"><small>SecPub Manager</small></span>
+  </div>
+  <span class="spacer"></span>
+  <div class="user-info" *ngIf="!isMobile">
+    <mat-icon class="notifications">notifications</mat-icon>
+    <span class="username">{{username}}</span>
+    <button mat-icon-button [matMenuTriggerFor]="userMenu">
+      <mat-icon class="account_circle">account_circle</mat-icon>
+    </button>
+    <mat-menu #userMenu="matMenu">
+      <button mat-menu-item (click)="openSettings()" >
+        <mat-icon class="settings">settings</mat-icon>
+        <span class="parametres">Paramètres</span>
+      </button>
+      <mat-divider class="sett"></mat-divider>
+      <button mat-menu-item (click)="logout()" >
+        <mat-icon class="settings">logout</mat-icon>
+        <span class="parametres">Déconnexion</span>
+      </button>
+    </mat-menu>
+  </div>
+</mat-toolbar>
+
+<mat-toolbar *ngIf="isMobile" class="mat-elevation-z8 mobile-toolbar">
+  <div class="user-info-mobile">
+    <mat-icon class="notifications">notifications</mat-icon>
+    <span class="username">{{username}}</span>
+    <button mat-icon-button [matMenuTriggerFor]="userMenu">
+      <mat-icon class="account_circle">account_circle</mat-icon>
+    </button>
+    <mat-menu #userMenu="matMenu">
+      <button mat-menu-item (click)="openSettings()" class="openSettings">
+        <mat-icon class="settings">settings</mat-icon>
+        <span class="parametres">Paramètres</span>
+      </button>
+      <mat-divider class="sett"></mat-divider>
+      <button mat-menu-item (click)="logout()" class="openSettings">
+        <mat-icon class="settings">logout</mat-icon>
+        <span class="parametres">Déconnexion</span>
+      </button>
+    </mat-menu>
+  </div>
+</mat-toolbar>
+
+<mat-sidenav-container>
+  <mat-sidenav #sidenav="matSidenav" 
+  class="mat-elevation-z8 sidenav"
+  [mode]="sidenavMode"
+  [opened]="sidenavOpened" >
+    <h4>Navigation</h4>
+    <button mat-button class="menu-button" [routerLink]="['/author', username, 'home']" routerLinkActive="active" (click)="closeSidenavIfMobile()">
+      <mat-icon>home</mat-icon>
+      <span class="span">ACCUEIL</span>
+    </button>
+    <button mat-button class="menu-button" [routerLink]="['/author', username, 'consultation-article']" routerLinkActive="active" (click)="closeSidenavIfMobile()">
+      <mat-icon>article</mat-icon>
+      <span class="span">MES ARTICLES</span>
+    </button>
+    <button mat-button class="menu-button" [routerLink]="['/author', username, 'my-groups']" routerLinkActive="active" (click)="closeSidenavIfMobile()">
+      <mat-icon>groups</mat-icon>
+      <span class="span">MES GROUPES </span>
+    </button>
+  
+    <mat-divider></mat-divider>
+    <button mat-button class="menu-button" [routerLink]="['/author', username, 'my-evaluations']" routerLinkActive="active" (click)="closeSidenavIfMobile()">
+      <mat-icon>rate_review</mat-icon>
+      <span class="span">MES EVALUATIONS </span>
+    </button>
+    <button mat-button class="menu-button" [routerLink]="['/author', username, 'profile']" routerLinkActive="active" (click)="closeSidenavIfMobile()">
+      <mat-icon>account_circle</mat-icon>
+      <span class="span">PROFILE</span>
+    </button>
+  </mat-sidenav>
+  
+  <mat-sidenav-content>
+    <div class="content mat-elevation-z8">
+      <router-outlet></router-outlet>
+    </div>
+     <!-- Footer -->
+      
+  <footer class="footer">
+  
+    <p class="footer__copyright">
+      {{currentYear}} 
+      &#169; SecPub Manager. Tous droits réservés
+      
+    </p>
+  </footer>
+  </mat-sidenav-content>
+</mat-sidenav-container>

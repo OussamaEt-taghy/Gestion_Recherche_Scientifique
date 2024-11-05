@@ -1,0 +1,53 @@
+<!--
+<div class="container">
+    <div class="header">
+        <div class="search-container">
+            <input type="text" placeholder="Chercher un groupe" class="search-bar">
+            <button class="search-button">
+                Search <i class="uil uil-search" style="color: var(--second-color); font-size: 13px"></i>
+            </button>
+        </div>
+        <button (click)="openAddArticlePopup()" class="btn-add">
+            Ajouter <i class="uil uil-users-alt" style="color: var(--second-color); font-size: 15px">+</i>
+        </button>
+    </div>
+  
+    <div class="table-responsive">
+        <table class="group-table">
+            <thead>
+                <tr>
+                    <th rowspan="2">Id</th>
+                    <th colspan="3">Résume d'un Article</th>
+                    <th rowspan="2">le contenu</th>
+                    <th rowspan="2">Statut d'évaluation</th>
+                    <th rowspan="3">Action</th>
+                </tr>
+               
+            </thead>
+            <tbody>
+              <ng-container *ngFor="let group of paginatedArticle">
+                <tr class="group-row">
+                  <td [attr.rowspan]="">{{ article.id }}</td>
+                 
+                  <td colspan=""></td>
+                  <td [attr.rowspan]="" class="action-cell">
+                    <i class="uil uil-edit-alt action-icon" (click)="openUpdateArticlePopup(group)" style="color: green;"></i>
+                    <i class="uil uil-trash-alt action-icon" (click)="removeArticle(group.id)" style="color: #ff4d4d;"></i>
+                    <button (click)="cancellation()">demande d'annulation</button>
+                  </td>
+                </tr>
+                
+              </ng-container>
+            </tbody>
+        </table>
+        <mat-paginator
+        [pageSizeOptions]="pageSizeOptions"
+        [pageSize]="pageSize"
+        (page)="onPageChange($event)"
+        showFirstLastButtons
+      >
+      </mat-paginator>
+       
+    </div>
+  </div>
+ -->

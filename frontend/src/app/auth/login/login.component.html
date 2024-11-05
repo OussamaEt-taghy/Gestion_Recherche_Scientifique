@@ -1,0 +1,28 @@
+<div class="login-container mat-elevation-z8">
+    <img src="../../../assets/imgs/fts_logo.png" alt="logo">
+    <h1>Connectez-vous à votre compte</h1>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <mat-form-field appearance="outline">
+        <mat-label>E-mail</mat-label>
+        <input matInput type="email" formControlName="email" required>
+        <mat-error *ngIf="email?.invalid">Veuillez entrer une adresse e-mail valide.</mat-error>
+      </mat-form-field>
+      
+      <mat-form-field appearance="outline">
+        <mat-label>Mot de passe</mat-label>
+        <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password" required>
+        <button mat-icon-button matSuffix (click)="togglePasswordVisibility()" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
+          <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+        <mat-error *ngIf="password?.invalid">Veuillez entrer un mot de passe valide </mat-error>
+      </mat-form-field>
+       <p class="forgot-password-link">
+      <a routerLink ='/auth/forgot-password'>Mot de passe oublié ?</a>
+    </p>
+  
+      <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid">Se connecter</button>
+    </form>
+    <p class="register-link">
+      Vous n'avez pas de compte ? <a routerLink="/auth/register">S'inscrire</a>
+    </p>
+  </div>

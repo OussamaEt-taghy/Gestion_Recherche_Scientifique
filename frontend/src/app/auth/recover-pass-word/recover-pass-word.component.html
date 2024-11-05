@@ -1,0 +1,55 @@
+
+<div class="forgot-password-container mat-elevation-z8">
+    <img src="../../../assets/imgs/fts_logo.png" alt="logo">
+    
+    
+
+<div *ngIf="step === 1">
+  <h1>Réinitialisation votre mot de passe</h1>
+  <form [formGroup]="emailForm" (ngSubmit)="sendOtp()">
+    <mat-form-field appearance="outline">
+      <mat-label>E-mail</mat-label>
+      <input matInput type="email" formControlName="email" required>
+      <mat-error *ngIf="emailForm.get('email')?.invalid">Veuillez entrer une adresse e-mail valide.</mat-error>
+    </mat-form-field>
+    <button mat-raised-button color="primary" type="submit" [disabled]="emailForm.invalid">Envoyer</button>
+  </form>
+</div>
+  
+    <div *ngIf="step === 2">
+      <h1>Vérification du Code OTP</h1>
+      <form [formGroup]="otpForm" (ngSubmit)="verifyOtp()">
+        <mat-form-field appearance="outline">
+          <mat-label>Entrez l'OTP</mat-label>
+          <input matInput id="otp" formControlName="otp" type="text" maxlength="6" minlength="6" required>
+          <mat-error *ngIf="otpForm.get('otp')?.invalid">Veuillez entrer un code valide.</mat-error>
+        </mat-form-field>
+        <button mat-raised-button color="primary" type="submit" [disabled]="otpForm.invalid">Vérifier Code</button>
+      </form>
+    </div>
+  
+    <div *ngIf="step === 3">
+      <h1>Changer le Mot de Passe</h1>
+      <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">
+        <mat-form-field appearance="outline">
+          <mat-label>Nouveau mot de passe</mat-label>
+          <input matInput type="password" formControlName="password" required>
+          <button mat-icon-button matSuffix (click)="togglePasswordVisibility()" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
+            <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+          <mat-error *ngIf="passwordForm.get('password')?.invalid">Veuillez entrer un mot de passe valide.</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Répétez le mot de passe</mat-label>
+          <input matInput type="password" formControlName="repeatPassword" required>
+          <button mat-icon-button matSuffix (click)="togglePasswordVisibility()" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
+            <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+          <mat-error *ngIf="passwordForm.get('repeatPassword')?.invalid">Veuillez répéter le mot de passe.</mat-error>
+          <mat-error *ngIf="passwordForm.value.password !== passwordForm.value.repeatPassword">Les mots de passe ne correspondent pas.</mat-error>
+        </mat-form-field>
+        <button mat-raised-button color="primary" type="submit" [disabled]="passwordForm.invalid || passwordForm.value.password !== passwordForm.value.repeatPassword">Changer Mot de Passe</button>
+      </form>
+    </div>
+  </div>
+  
